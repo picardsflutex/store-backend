@@ -1,9 +1,26 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+puts "Seeding Users..."
+user = User.create(
+  first_name: 'Andrii', 
+  last_name: 'Chernov', 
+  email: 'admin@test.com', 
+  password: 'admin123',
+  role: 'admin'
+)
+
+puts "Seeding Items..."
+item1 = Item.create(name: 'Laptop', description: 'A powerful laptop', price: 999.99)
+item2 = Item.create(name: 'Phone', description: 'A smartphone with great features', price: 499.99)
+item3 = Item.create(name: 'TV', description: 'A TV with good screen', price: 399.99)
+
+puts "Seeding Orders..."
+order_amount = item1.price + item2.price * 2 
+order = Order.create(
+  user: user, 
+  amount: order_amount
+)
+
+puts "Seeding Order Descriptions..."
+OrderDescription.create(order: order, item: item1, price: item1.price, quantity: 1)
+OrderDescription.create(order: order, item: item2, price: item2.price, quantity: 2)
+
+puts "Seeding completed!"

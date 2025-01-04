@@ -100,6 +100,9 @@ GEM
       devise (~> 4.0)
       warden-jwt_auth (~> 0.10)
     dotenv (3.1.7)
+    dotenv-rails (3.1.7)
+      dotenv (= 3.1.7)
+      railties (>= 6.1)
     drb (2.2.1)
     dry-auto_inject (1.0.1)
       dry-core (~> 1.0)
@@ -319,6 +322,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    will_paginate (4.0.1)
     zeitwerk (2.7.1)
 
 PLATFORMS
@@ -337,6 +341,7 @@ DEPENDENCIES
   debug
   devise
   devise-jwt
+  dotenv-rails
   jsonapi-serializer
   kamal
   pg (~> 1.1)
@@ -349,6 +354,7 @@ DEPENDENCIES
   solid_queue
   thruster
   tzinfo-data
+  will_paginate
 
 BUNDLED WITH
    2.6.2
