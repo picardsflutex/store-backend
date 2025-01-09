@@ -37,7 +37,7 @@ gem "rack-cors"
 gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
-gem 'will_paginate'
+gem 'kaminari'
 
 
 group :development, :test do

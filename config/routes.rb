@@ -7,19 +7,25 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :orders, only: [:create, :index]
       resources :items, only: [:create, :update, :destroy, :index, :show]
+      resources :users, only: [:index]
     end
   end
   
   get "up" => "rails/health#show", as: :rails_health_check
   devise_for :users, path: '', path_names: {
-    sign_in: 'login',
-    sign_out: 'logout',
-    registration: 'signup'
+    sign_in: '/user/login',
+    sign_out: '/user/logout',
+    registration: '/user/register'
   },
   controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
+
+  devise_scope :user do
+    put '/user/update', to: 'users/registrations#update', as: :update_user_registration
+    put '/user/update/:id', to: 'users/registrations#update_profile', as: :update_user_profile
+  end
 
   # Defines the root path route ("/")
   # root "posts#index"

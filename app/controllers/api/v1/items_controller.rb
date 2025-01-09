@@ -1,13 +1,34 @@
 class Api::V1::ItemsController < ApplicationController
-	before_action :authenticate_user!
+	before_action :authenticate_user!, except: [:index, :show]
   before_action :authorize_admin!, only: [:create, :update, :destroy]
   before_action :set_item, only: [:show, :update, :destroy]
 
   # GET /api/v1/items
   def index
-    items = Item.where('name ILIKE ?', "%#{params[:query]}%").paginate(page: params[:page], per_page: params[:per_page])
-    render json: items, status: :ok
+    items = Item.all
+
+    if params[:query].present?
+      query = params[:query]
+  
+      if query.to_i.to_s == query
+        id_items = items.where(id: query.to_i)
+      else
+        id_items = []
+      end
+  
+      name_items = items.where('name ILIKE ?', "%#{query}%")
+
+      items = id_items + name_items
+    end
+
+    limit = params[:limit].presence&.to_i || 10
+    page = params[:page].presence&.to_i || 1
+    offset = (page - 1) * limit
+    paginated_items = items[offset, limit]
+
+    render json: paginated_items, status: :ok
   end
+
 
   # GET /api/v1/items/:id
   def show
