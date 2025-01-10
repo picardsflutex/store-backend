@@ -1,8 +1,6 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :authenticate_user!
-			before_action :authorize_admin!
 
       def index			
 				users = User.all
@@ -16,8 +14,13 @@ module Api
 						id_users = []
 					end
 
-					name_users = users.where('name ILIKE ?', "%#{query}%")
-					users = id_users + name_users
+					firstname_users = users.where('first_name ILIKE ?', "%#{query}%")
+					lastname_users = users.where('last_name ILIKE ?', "%#{query}%")
+
+					firstname_users = firstname_users.reject { |user| id_users.include?(user) }
+					lastname_users = lastname_users.reject { |user| id_users.include?(user) || firstname_users.include?(user) }
+
+					users = id_users + firstname_users + lastname_users
 				end
 
 				limit = params[:limit].presence&.to_i || 10
@@ -30,6 +33,10 @@ module Api
 					data: paginated_users.map { |user| UserSerializer.new(user).serializable_hash[:data][:attributes] }
 				}, status: :ok
       end
+
+			def authorize_admin!
+				render json: { error: 'Access denied' }, status: :forbidden unless current_user&.admin?
+			end
     end
   end
 end

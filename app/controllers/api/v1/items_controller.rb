@@ -9,7 +9,7 @@ class Api::V1::ItemsController < ApplicationController
 
     if params[:query].present?
       query = params[:query]
-  
+      id_items = []
       if query.to_i.to_s == query
         id_items = items.where(id: query.to_i)
       else
@@ -17,6 +17,7 @@ class Api::V1::ItemsController < ApplicationController
       end
   
       name_items = items.where('name ILIKE ?', "%#{query}%")
+      name_items = name_items.reject { |item| id_items.include?(item) }
 
       items = id_items + name_items
     end
